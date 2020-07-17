@@ -29,5 +29,24 @@ namespace SparkDotNet {
         /// The address of the location.
         /// </summary>
         public LocationAddress Address { get; set; }
-   }
+
+        #region Spark AR
+        protected Organization _organization = null;
+        public Organization Organization { get
+            {
+                if (_organization != null)
+                    return _organization;
+                if (SparkClient == null)
+                    return null;
+
+                return SparkClient.GetOrganizationAsync(OrgId, true).Result ;
+            }}
+
+        public override void UpdateObject(object source)
+        {
+            if (source.GetType() == typeof(Organization))
+                _organization = (Organization)source;
+        }
+        #endregion Spark AR
+    }
 }

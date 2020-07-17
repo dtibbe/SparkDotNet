@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace SparkDotNet {
 
@@ -9,6 +10,7 @@ namespace SparkDotNet {
     /// </summary>
     public class Organization : WebexObject
     {
+        #region Properties
         /// <summary>
         /// A unique identifier for the organization.
         /// </summary>
@@ -45,5 +47,68 @@ namespace SparkDotNet {
         /// </summary>
         public string XsiDomain { get; set; }
         #endregion XSI Properties
+
+        #endregion Properties
+
+        #region AR Objects
+        [SparkARResettable(DefaultValue = null)]
+        private List<Person> _people = null;
+        public List<Person> People { get
+            {
+                if (_people != null)
+                    return _people;
+                if (SparkClient == null)
+                    return null;
+
+                _people = SparkClient.GetPeopleAsync(orgId: id).Result;
+
+                foreach (Person person in _people)
+                    person.UpdateObject(this);
+
+                return _people;
+            }; }
+
+
+        [SparkARResettable(DefaultValue = null)]
+        private List<Location> _locations = null;
+        public List<Location> Locations
+        {
+            get
+            {
+                if (_locations != null)
+                    return _locations;
+                if (SparkClient == null)
+                    return null;
+
+                _locations = SparkClient.GetLocationsAsync(orgId: id).Result;
+
+                foreach (Location location in _locations)
+                    location.UpdateObject(this);
+
+                return _locations;
+            };
+        }
+
+        [SparkARResettable(DefaultValue = null)]
+        private List<Place> _places = null;
+        public List<Place> Places
+        {
+            get
+            {
+                if (_places != null)
+                    return _places;
+                if (SparkClient == null)
+                    return null;
+
+                _places = SparkClient.GetPlacesAsync(orgId: id).Result;
+
+                foreach (Place place in _places)
+                    place.UpdateObject(this);
+
+                return _places;
+            };
+        }
+
+        #endregion AR Objects
     }
 }
